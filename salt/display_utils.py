@@ -6,12 +6,19 @@ class DisplayUtils:
     def __init__(self):
         self.transparency = 0.3
         self.box_width = 2
+        self.text_size = 1.5  # 默认文字大小
 
     def increase_transparency(self):
         self.transparency = min(1.0, self.transparency + 0.05)
     
     def decrease_transparency(self):
         self.transparency = max(0.0, self.transparency - 0.05)
+
+    def increase_text_size(self):
+        self.text_size = min(5.0, self.text_size + 0.1)  # 最大文字大小为 5.0
+
+    def decrease_text_size(self):
+        self.text_size = max(0.5, self.text_size - 0.1)  # 最小文字大小为 0.5
 
     def overlay_mask_on_image(self, image, mask, color=(0, 0, 255)):
         gray_mask = mask.astype(np.uint8) * 255
@@ -44,9 +51,11 @@ class DisplayUtils:
         text = '{} {}'.format(ann["id"],categories[ann["category_id"]])
         txt_color = (0, 0, 0) if np.mean(color) > 127 else (255, 255, 255)
         font = cv2.FONT_HERSHEY_SIMPLEX
-        txt_size = cv2.getTextSize(text, font, 1.5, 1)[0]
-        cv2.rectangle(image, (x, y + 1), (x + txt_size[0] + 1, y + int(1.5*txt_size[1])), color, -1)
-        cv2.putText(image, text, (x, y + txt_size[1]), font, 1.5, txt_color, thickness=5)
+        txt_size = cv2.getTextSize(text, font, self.text_size, 1)[0]
+        thickness = max(1, int(self.text_size * 3.33))
+
+        cv2.rectangle(image, (x, y + 1), (x + txt_size[0] + 1, y + int(self.text_size*txt_size[1])), color, -1)
+        cv2.putText(image, text, (x, y + txt_size[1]), font, self.text_size, txt_color, thickness=thickness)
         return image
 
     def draw_annotations(self, image, categories, annotations, colors):
