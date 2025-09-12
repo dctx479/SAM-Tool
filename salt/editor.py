@@ -50,6 +50,7 @@ class Editor:
         self.image_id = 0
         self.category_id = 0
         self.show_other_anns = True
+        self.num_images = self.dataset_explorer.get_num_images()
         (
             self.image,
             self.image_bgr,
@@ -123,9 +124,7 @@ class Editor:
         self.dataset_explorer.save_annotation()
 
     def next_image(self):
-        if self.image_id == self.dataset_explorer.get_num_images() - 1:
-            return
-        self.image_id += 1
+        self.image_id = (self.image_id + 1) % self.num_images
         (
             self.image,
             self.image_bgr,
@@ -135,9 +134,7 @@ class Editor:
         self.reset()
 
     def prev_image(self):
-        if self.image_id == 0:
-            return
-        self.image_id -= 1
+        self.image_id = (self.image_id - 1) % self.num_images
         (
             self.image,
             self.image_bgr,
