@@ -75,6 +75,8 @@ class ApplicationInterface(QWidget):
         self.editor = editor
         self.panel_size = panel_size
 
+        self.setWindowTitle(f"1/{self.editor.dataset_explorer.get_num_images()}") # 设置窗口标题
+
         self.layout = QVBoxLayout()
 
         self.top_bar = self.get_top_bar()
@@ -112,10 +114,12 @@ class ApplicationInterface(QWidget):
         self.editor.next_image()
         self.graphics_view.imshow(self.editor.display)
         self.editor.save()
+        self.setWindowTitle(f"{self.editor.image_id+1}/{self.editor.dataset_explorer.get_num_images()}")
 
     def prev_image(self):
         self.editor.prev_image()
         self.graphics_view.imshow(self.editor.display)    
+        self.setWindowTitle(f"{self.editor.image_id+1}/{self.editor.dataset_explorer.get_num_images()}")
 
     def toggle(self):
         self.editor.toggle()
@@ -128,6 +132,15 @@ class ApplicationInterface(QWidget):
     def transparency_down(self):
         self.editor.step_down_transparency()
         self.graphics_view.imshow(self.editor.display)
+
+    def increase_text_size(self):
+        self.editor.increase_text_size()
+        self.graphics_view.imshow(self.editor.display)
+
+    def decrease_text_size(self):
+        self.editor.decrease_text_size()
+        self.graphics_view.imshow(self.editor.display)
+
     
     def save_all(self):
         self.editor.save()
@@ -145,6 +158,8 @@ class ApplicationInterface(QWidget):
             ("显示已标注信息", lambda: self.toggle()),
             ("调高透明度", lambda: self.transparency_up()),
             ("调低透明度", lambda: self.transparency_down()),
+            ("文字调大", lambda: self.increase_text_size()),  # 新增按钮
+            ("文字调小", lambda: self.decrease_text_size()),  # 新增按钮
             ("保存", lambda: self.save_all()), 
         ]
         for button, lmb in buttons:
